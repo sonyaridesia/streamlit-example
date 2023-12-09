@@ -40,9 +40,10 @@ def main():
             st.write(df)
 
             # Menambahkan fitur menghitung rata-rata
-            mean_values = df.mean()
             st.write("## Rata-rata:")
-            st.write(mean_values)
+            for column in df.select_dtypes(include='number').columns:
+                mean_value = df[column].mean()
+                st.write(f"Mean of {column}: {mean_value}")
 
             # Menambahkan fitur menampilkan histogram
             st.write("## Histogram:")
