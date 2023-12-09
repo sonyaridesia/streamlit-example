@@ -1,40 +1,72 @@
-import altair as alt
-import numpy as np
-import pandas as pd
 import streamlit as st
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
 
-"""
-# Welcome to Streamlit!
+def main():
+    st.title("Data Processing Group Project")
+    st.write("Nama Anggota:")
+    st.write("- Isky Dwi Aprilianto-064002200006")
+    st.write("- Sonya Ridesia Hastari-064002200007")
+    st.write("- Chaesa Namida Arumdapta-064002200008")
+    st.write("- Tarum Widyasti Pertiwi-064002200027")
+    st.write("- Vania Rahma Dewi-064002200030")
 
-Edit `/streamlit_app.py` to customize this app to your heart's desire :heart:.
-If you have any questions, checkout our [documentation](https://docs.streamlit.io) and [community
-forums](https://discuss.streamlit.io).
+    # Upload CSV file through Streamlit
+    uploaded_file = st.file_uploader("Choose a CSV file", type=["csv"])
 
-In the meantime, below is an example of what you can do with just a few lines of code:
-"""
+    # Tombol "Process" untuk menampilkan data setelah file diunggah
+    if uploaded_file is not None:
+        if st.button("Process CSV"):
+            # Read CSV file into DataFrame
+            df = pd.read_csv(uploaded_file)
 
-num_points = st.slider("Number of points in spiral", 1, 10000, 1100)
-num_turns = st.slider("Number of turns in spiral", 1, 300, 31)
+            # Display basic information
+            st.write("## Basic Information:")
+            st.write(f"Number of Rows: {df.shape[0]}")
+            st.write(f"Number of Columns: {df.shape[1]}")
 
-indices = np.linspace(0, 1, num_points)
-theta = 2 * np.pi * num_turns * indices
-radius = indices
+            # Display data types and missing values
+            st.write("## Data Types and Missing Values:")
+            st.write(df.dtypes)
+            st.write(df.isnull().sum())
 
-x = radius * np.cos(theta)
-y = radius * np.sin(theta)
+            # Display descriptive statistics
+            st.write("## Descriptive Statistics:")
+            st.write(df.describe())
 
-df = pd.DataFrame({
-    "x": x,
-    "y": y,
-    "idx": indices,
-    "rand": np.random.randn(num_points),
-})
+            # Display visualizations and other features as before...
+            st.write("## Data Preview:")
+            st.write(df)
 
-st.altair_chart(alt.Chart(df, height=700, width=700)
-    .mark_point(filled=True)
-    .encode(
-        x=alt.X("x", axis=None),
-        y=alt.Y("y", axis=None),
-        color=alt.Color("idx", legend=None, scale=alt.Scale()),
-        size=alt.Size("rand", legend=None, scale=alt.Scale(range=[1, 150])),
-    ))
+            # Menambahkan fitur menghitung rata-rata
+            mean_values = df.mean()
+            st.write("## Rata-rata:")
+            st.write(mean_values)
+
+            # Menambahkan fitur menampilkan histogram
+            st.write("## Histogram:")
+            for column in df.columns:
+                st.subheader(f"Histogram for {column}")
+                st.bar_chart(df[column])
+
+            # Menambahkan fitur menampilkan boxplot
+            st.write("## Boxplot:")
+            for column in df.columns:
+                st.subheader(f"Boxplot for {column}")
+                st.pyplot(plot_boxplot(df, column))
+
+def plot_boxplot(df, column):
+    plt.figure(figsize=(8, 6))
+    
+    # Periksa apakah kolom berisi data numerik
+    if pd.api.types.is_numeric_dtype(df[column]):
+        sns.boxplot(x=df[column])
+        plt.title(f'Boxplot for {column}')
+    else:
+        plt.title(f'Cannot create boxplot for non-numeric column: {column}')
+    
+    return plt
+
+if __name__ == "__main__":
+    main()
