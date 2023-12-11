@@ -3,3 +3,6 @@ pandas
 streamlit
 seaborn
 matplotlib
+plotly.express
+base64
+io
