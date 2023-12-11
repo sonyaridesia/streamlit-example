@@ -67,5 +67,17 @@ def main():
                 st.write("### One-Hot Encoded Data:")
                 st.write(one_hot_df)
 
+def plot_boxplot(df, column):
+    plt.figure(figsize=(8, 6))
+    
+    # Periksa apakah kolom berisi data numerik
+    if pd.api.types.is_numeric_dtype(df[column]):
+        sns.boxplot(x=df[column])
+        plt.title(f'Boxplot for {column}')
+    else:
+        plt.title(f'Cannot create boxplot for non-numeric column: {column}')
+    
+    return plt
+
 if __name__ == "__main__":
     main()
