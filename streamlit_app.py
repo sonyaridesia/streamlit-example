@@ -107,3 +107,4 @@ def update_histogram(selected_column, df):
 
 if __name__ == "__main__":
     main()
+
